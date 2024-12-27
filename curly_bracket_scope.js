@@ -16,6 +16,7 @@ function loop_string_scope(m){
 	for( let i=0;i<m.length;i++ ){
 
 		global["end_curly_bracket"] = false
+		global["start_curly_bracket"] = false
 
 		if( m[i] == "\n" ) count_line++
 
@@ -52,6 +53,7 @@ function loop_string_scope(m){
 
 			if( m[i-1] != "$" && m[i] == "{" ){ /* variable in backtick string scope */
 				curly_bracket = true
+				global["start_curly_bracket"] = true
 				w.push({ level, array: [] })
 				w.at(-1).array.push( `<span style="color:red">${m[i]}</span>` + ` /*level ${level} =>*/ `)
 				level++
@@ -65,12 +67,12 @@ function loop_string_scope(m){
 	
 		}
 
-		if( global["end_curly_bracket"] ){
+		if( global["end_curly_bracket"] || global["start_curly_bracket"] ){
 
 		}else{
 			w.at(-1).array.push( e(m[i]) )
 		}
-		
+
 		/*if( quote == false && double_quote == false && backtick == false && slash == false && !bool_next_char ){
 			w.at(-1).array.push( e(m[i]) )
 		}
